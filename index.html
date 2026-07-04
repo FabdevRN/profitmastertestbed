@@ -52,8 +52,7 @@
 
     <script>
         const CONFIG = {
-            companyLabel: "BIG SHARK HVAC MONTGOMERY" , 
-            validTokenHash: "QklHU0hBUktIVkFD==" 
+            companyLabel: "BIG SHARK HVAC MONTGOMERY"
         };
 
         const FIELDS = [
@@ -66,7 +65,8 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            if (btoa(params.get('license') || '') === CONFIG.validTokenHash) {
+            // Access granted if URL is ?license=BIGSHARKHVAC
+            if (params.get('license') === "BIGSHARKHVAC") {
                 document.getElementById('lockScreen').classList.add('hidden');
                 document.getElementById('appContainer').classList.remove('hidden');
                 document.getElementById('companyName').innerText = CONFIG.companyLabel;
@@ -99,15 +99,12 @@
             const commType = document.getElementById('commType').value;
             let commVal = get('commVal');
 
-            // --- COMMISSION CAP LOGIC ---
             if (commType === 'percent' && commVal > 100) {
                 commVal = 100;
                 document.getElementById('commVal').value = 100;
             }
-            // ----------------------------
 
             const commPaid = commType === 'percent' ? price * (commVal / 100) : commVal;
-            
             const direct = get('equipment') + get('materials') + get('sub') + (get('techHours') * get('techRate')) + commPaid;
             const overhead = (get('driveHours') * get('fleetRate')) + get('overhead');
             const net = price - direct - overhead;
